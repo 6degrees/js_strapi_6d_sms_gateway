@@ -1,0 +1,14 @@
+version: "3"
+
+services:
+  app:
+    build:
+      context: ./app
+    container_name: strapi_6d_sms
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+    volumes:
+      - ./app:/srv/app
+    ports:
+      - 127.0.0.1:8055:1337
