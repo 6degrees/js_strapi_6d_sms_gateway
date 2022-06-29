@@ -13,7 +13,7 @@ module.exports = createCoreController('api::message.message', ({strapi}) => ({
     // some logic here
 
     // Check Message Language and credits required
-    const MESSAGE = ctx.request.body.data.content; // we didn't check if it exists or not
+    const MESSAGE = ctx.request.body.data; // we didn't check if it exists or not
     const MSEGAT_USERNAME = process.env.MSEGAT_USERNAME;
     const MSEGAT_API_KEY = process.env.MSEGAT_API_KEY;
     const MSEGAT_SENDER = ctx.state.user.sender_name;
@@ -24,12 +24,12 @@ module.exports = createCoreController('api::message.message', ({strapi}) => ({
     let required_credit = 1;
 
     const english = /^[~`!@ #$%^&*()_+=[\]\\{}|;':",.\/<>?a-zA-Z0-9-]+$/;
-    const isEnglish = english.test(MESSAGE);
+    const isEnglish = english.test(MESSAGE.content);
 
     if (isEnglish) {
-      required_credit = (MESSAGE.length > 160) ? Math.ceil(MESSAGE.length / 153) : 1;
+      required_credit = (MESSAGE.content.length > 160) ? Math.ceil(MESSAGE.content.length / 153) : 1;
     } else {
-      required_credit = (MESSAGE.length > 70) ? Math.ceil(MESSAGE.length / 63) : 1;
+      required_credit = (MESSAGE.content.length > 70) ? Math.ceil(MESSAGE.content.length / 63) : 1;
     }
 
     // check if has credit
@@ -71,34 +71,38 @@ module.exports = createCoreController('api::message.message', ({strapi}) => ({
       //send the sms to gateway
       if (MSEGAT_API_KEY) {
 
-        let {data} = await axios.post(MSEGAT_SEND_URL, {
+        const params = {
           userName: MSEGAT_USERNAME,
           numbers: MESSAGE.to,
           userSender: MSEGAT_SENDER,
           apiKey: MSEGAT_API_KEY,
           msg: MESSAGE.content
-        });
+        };
+        let {data} = await axios.post(MSEGAT_SEND_URL, params);
+
+        if(data.code != '1'){
+          return ctx.badRequest('Provider Did Not Accept the Message',data)
+        }
+        
 
         // if reached here then it is a success, update status, if not, put keep pending and add comment, and reduce the credit by 1
-        console.log(response.data.id)
         ctx.request.body.data.status = 'sent';
         //ctx.request.body.data.id = response.data.id;
 
         response = await strapi.entityService.update('api::message.message', response.data.id, {data: ctx.request.body.data,});
     
-        console.log(response);
         response.meta = {};
         response.meta.gateway_response = data
+
         response.meta.additional_data = {
           'user credits': ctx.state.user.credit,
           'provider credits': MSEGAT_BALANCE,
           'message required credits': required_credit,
           'isEnglish': isEnglish,
-          'MESSAGE.length': MESSAGE.length
+          'MESSAGE.length': MESSAGE.content.length
         }
       } else {
         return ctx.badRequest('API Key not provided')
-        ''
       }
     } catch (error) {
       console.error(error);
