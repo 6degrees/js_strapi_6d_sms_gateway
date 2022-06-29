@@ -84,18 +84,24 @@ module.exports = createCoreController('api::message.message', ({strapi}) => ({
           return ctx.badRequest('Provider Did Not Accept the Message',data)
         }
         
+        
 
         // if reached here then it is a success, update status, if not, put keep pending and add comment, and reduce the credit by 1
         ctx.request.body.data.status = 'sent';
         //ctx.request.body.data.id = response.data.id;
 
         response = await strapi.entityService.update('api::message.message', response.data.id, {data: ctx.request.body.data,});
+        const new_user_credits = ctx.state.user.credit - required_credit;
+
+        //reduce user credit
+        const updateCredit = await strapi.entityService.update('plugin::users-permissions.user', ctx.state.user.id, {data: {credit: new_user_credits}});
     
         response.meta = {};
         response.meta.gateway_response = data
 
         response.meta.additional_data = {
-          'user credits': ctx.state.user.credit,
+          'old user credits': ctx.state.user.credit,
+          'new user credits': new_user_credits,
           'provider credits': MSEGAT_BALANCE,
           'message required credits': required_credit,
           'isEnglish': isEnglish,
