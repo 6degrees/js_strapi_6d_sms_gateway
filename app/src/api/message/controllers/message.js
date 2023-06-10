@@ -53,16 +53,16 @@ module.exports = createCoreController('api::message.message', ({ strapi }) => ({
 
     // Add to DB as pending
     ctx.request.body.data.status = 'pending';
-    let response = await super.create(ctx);
+    let sms_response = await super.create(ctx);
 
     axios.request(options).then(async function (response) {
       // if reached here then it is a success, update status, if not, put keep pending and add comment, and reduce the credit by 1
       ctx.request.body.data.status = 'sent';
 
-      response = await strapi.entityService.update('api::message.message', response.data.id, {data: ctx.request.body.data,});
+      response = await strapi.entityService.update('api::message.message', sms_response.data.id, {data: ctx.request.body.data});
       const new_user_credits = ctx.state.user.credit - required_credit;
       //reduce user credit
-      const updateCredit = await strapi.entityService.update('plugin::users-permissions.user', ctx.state.user.id, {data: {credit: new_user_credits}});
+      await strapi.entityService.update('plugin::users-permissions.user', ctx.state.user.id, {data: {credit: new_user_credits}});
 
       response.meta = {};
       response.meta.gateway_response = data
@@ -75,16 +75,17 @@ module.exports = createCoreController('api::message.message', ({ strapi }) => ({
         'isEnglish': isEnglish,
         'MESSAGE.length': MESSAGE.content.length
       }
+
     }).catch(function (error) {
       return ctx.badRequest('Provider Did Not Accept the Message', error)
     });
 
     // if response var is empty
-    if (!response) {
+    if (!sms_response) {
       return ctx.badRequest('An Error occured', error)
     }
 
-    return response;
+    return sms_response;
   }
 
 }));
