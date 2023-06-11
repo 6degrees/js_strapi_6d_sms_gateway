@@ -6,7 +6,7 @@ LABEL com.centurylinklabs.watchtower.enable="false"
 WORKDIR /app
 
 COPY ./package*.json ./
-COPY ./.env.example ./.env
+COPY ./.env.example ./stack.env
 # COPY ./.env ./
 
 RUN npm ci
