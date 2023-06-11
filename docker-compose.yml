@@ -3,7 +3,7 @@ version: "3"
 services:
   app:
     build:
-      context: ./app
+      context: .
     container_name: strapi_6d_sms
     restart: unless-stopped
     volumes:
