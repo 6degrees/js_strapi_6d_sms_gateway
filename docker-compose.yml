@@ -6,7 +6,8 @@ services:
       context: ./app
     container_name: strapi_6d_sms
     restart: unless-stopped
-    env_file: app/.env
+    env_file:
+      - stack.env
     volumes:
       - ./app:/srv/app
     ports:
