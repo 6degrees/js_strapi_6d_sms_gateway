@@ -4,6 +4,7 @@ LABEL com.centurylinklabs.watchtower.enable="false"
 WORKDIR /srv/app
 COPY ./app/package*.json ./
 RUN npm ci
+COPY . .
 COPY ./app/ /srv/app
 RUN npm run build
 EXPOSE 1337
