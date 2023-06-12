@@ -1,9 +1,9 @@
-FROM strapi/base:latest
+FROM strapi/base:14
 LABEL com.centurylinklabs.watchtower.enable="false"
 WORKDIR /app
 COPY ./src/package*.json ./
 RUN npm install
-COPY --chown=node:node ./src/* .
+COPY ./src/* ./
 ENV NODE_ENV production
 RUN npm run build
 EXPOSE 1337
