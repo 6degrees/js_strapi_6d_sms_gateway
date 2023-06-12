@@ -1,11 +1,11 @@
 FROM strapi/base
 # Let WatchTower know to ignore this container for checking
 LABEL com.centurylinklabs.watchtower.enable="false"
-WORKDIR /app
+WORKDIR /srv/app
 COPY ./app/package*.json ./
 RUN npm ci
-COPY . .
-ENV NODE_ENV production
+COPY ./app/ /srv/app
 RUN npm run build
 EXPOSE 1337
+ENV NODE_ENV production
 CMD ["npm", "start"]
