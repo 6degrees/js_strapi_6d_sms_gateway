@@ -1,14 +1,15 @@
-FROM strapi/base:14
+FROM strapi/base
 
+# Let WatchTower know to ignore this container for checking
 LABEL com.centurylinklabs.watchtower.enable="false"
 
 WORKDIR /app
 
-COPY ./src/package-lock.json ./src/package.json ./
+COPY ./app/package*.json ./
 
-RUN npm install
+RUN npm ci
 
-COPY ./src/ ./
+COPY ./app .
 
 ENV NODE_ENV production
 
