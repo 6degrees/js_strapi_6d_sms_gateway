@@ -12,4 +12,4 @@ services:
     env_file:
       - stack.env
     volumes:
-      - ./app:/srv/app
+      - ./app:/srv/app/

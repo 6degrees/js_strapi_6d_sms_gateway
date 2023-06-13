@@ -1,13 +1,13 @@
 # Use an official Node.js LTS (Long Term Support) image as the base
 FROM node:lts-alpine
 
-WORKDIR /app
+WORKDIR /app/
 
 COPY ./app/package*.json ./
 
 RUN npm ci --production
 
-COPY ./app .
+COPY ./app/ .
 
 ENV NODE_ENV production
 
