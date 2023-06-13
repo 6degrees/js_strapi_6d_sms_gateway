@@ -9,6 +9,8 @@ RUN npm ci --production
 
 COPY ./app .
 
+ENV NODE_ENV production
+
 RUN npm run build
 
 EXPOSE 1337
