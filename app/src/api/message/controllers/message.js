@@ -10,7 +10,6 @@ module.exports = createCoreController("api::message.message", ({ strapi }) => ({
   async create(ctx) {
     // Check Message Language and credits required
     const MESSAGE = ctx.request.body.data; // we didn't check if it exists or not
-
     let required_credit = 1;
 
     const english = /^[~`!@ #$%^&*()_+=[\]\\{}|;':",.\/<>?a-zA-Z0-9-]+$/;
@@ -32,7 +31,6 @@ module.exports = createCoreController("api::message.message", ({ strapi }) => ({
     if (!phoneNumber.startsWith("+966")) {
       saudiNumber = false;
     }
-
     const axios = require("axios");
     let options;
     if (saudiNumber) {
@@ -94,6 +92,7 @@ module.exports = createCoreController("api::message.message", ({ strapi }) => ({
       .then(async function (response) {
         // if reached here then it is a success, update status, if not, put keep pending and add comment, and reduce the credit by 1
         ctx.request.body.data.status = "sent";
+        console.log(response);
 
         response = await strapi.entityService.update(
           "api::message.message",
