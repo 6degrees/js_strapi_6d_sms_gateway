@@ -92,8 +92,8 @@ module.exports = createCoreController("api::message.message", ({ strapi }) => ({
       .then(async function (response) {
         // if reached here then it is a success, update status, if not, put keep pending and add comment, and reduce the credit by 1
         ctx.request.body.data.status = "sent";
-        console.log(options);
-        response = await strapi.entityService.update(
+
+        sms_response = await strapi.entityService.update(
           "api::message.message",
           sms_response.data.id,
           { data: ctx.request.body.data }
@@ -106,10 +106,10 @@ module.exports = createCoreController("api::message.message", ({ strapi }) => ({
           { data: { credit: new_user_credits } }
         );
 
-        response.meta = {};
-        response.meta.gateway_response = data;
+        sms_response.meta = {};
+        sms_response.meta.gateway_response = data;
 
-        response.meta.additional_data = {
+        sms_response.meta.additional_data = {
           "old user credits": ctx.state.user.credit,
           "new user credits": new_user_credits,
           "provider credits": 1, // if have make it constant becuase there's no endpoint to get the credits
