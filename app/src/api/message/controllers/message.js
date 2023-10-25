@@ -34,7 +34,6 @@ module.exports = createCoreController("api::message.message", ({ strapi }) => ({
     const axios = require("axios");
     var options;
     if (saudiNumber) {
-      console.log("sending from first value");
       options = {
         method: "POST",
         url: `${process.env.FIRST_VALUE_BASE_URL}/unified/v2/send`,
@@ -67,7 +66,6 @@ module.exports = createCoreController("api::message.message", ({ strapi }) => ({
         },
       };
     } else {
-      console.log("sending from taqnyat");
       // asuming that phone number is +{country code}{phone number}
       const recipient = phoneNumber.replace("+", "");
       options = {
@@ -92,7 +90,6 @@ module.exports = createCoreController("api::message.message", ({ strapi }) => ({
       const response = await axios.request(options);
       // if reached here then it is a success, update status, if not, put keep pending and add comment, and reduce the credit by 1
       ctx.request.body.data.status = "sent";
-      console.log(response);
       sms_response = await strapi.entityService.update(
         "api::message.message",
         sms_response.data.id,
@@ -107,7 +104,7 @@ module.exports = createCoreController("api::message.message", ({ strapi }) => ({
       );
 
       sms_response.meta = {};
-      sms_response.meta.gateway_response = data;
+      sms_response.meta.gateway_response = response.data;
 
       sms_response.meta.additional_data = {
         "old user credits": ctx.state.user.credit,
