@@ -87,36 +87,40 @@ module.exports = createCoreController("api::message.message", ({ strapi }) => ({
     ctx.request.body.data.status = "pending";
     let sms_response = await super.create(ctx);
 
-    const response = axios.request(options);
+    axios
+      .request(options)
+      .then(async function (response) {
+        // if reached here then it is a success, update status, if not, put keep pending and add comment, and reduce the credit by 1
+        ctx.request.body.data.status = "sent";
 
-    // if reached here then it is a success, update status, if not, put keep pending and add comment, and reduce the credit by 1
-    ctx.request.body.data.status = "sent";
-    console.log(response);
+        response = await strapi.entityService.update(
+          "api::message.message",
+          sms_response.data.id,
+          { data: ctx.request.body.data }
+        );
+        const new_user_credits = ctx.state.user.credit - required_credit;
+        //reduce user credit
+        await strapi.entityService.update(
+          "plugin::users-permissions.user",
+          ctx.state.user.id,
+          { data: { credit: new_user_credits } }
+        );
 
-    response = await strapi.entityService.update(
-      "api::message.message",
-      sms_response.data.id,
-      { data: ctx.request.body.data }
-    );
-    const new_user_credits = ctx.state.user.credit - required_credit;
-    //reduce user credit
-    await strapi.entityService.update(
-      "plugin::users-permissions.user",
-      ctx.state.user.id,
-      { data: { credit: new_user_credits } }
-    );
+        response.meta = {};
+        response.meta.gateway_response = data;
 
-    response.meta = {};
-    response.meta.gateway_response = data;
-
-    response.meta.additional_data = {
-      "old user credits": ctx.state.user.credit,
-      "new user credits": new_user_credits,
-      "provider credits": 1, // if have make it constant becuase there's no endpoint to get the credits
-      "message required credits": required_credit,
-      isEnglish: isEnglish,
-      "MESSAGE.length": MESSAGE.content.length,
-    };
+        response.meta.additional_data = {
+          "old user credits": ctx.state.user.credit,
+          "new user credits": new_user_credits,
+          "provider credits": 1, // if have make it constant becuase there's no endpoint to get the credits
+          "message required credits": required_credit,
+          isEnglish: isEnglish,
+          "MESSAGE.length": MESSAGE.content.length,
+        };
+      })
+      .catch(function (error) {
+        return ctx.badRequest("Provider Did Not Accept the Message", error);
+      });
 
     // if response var is empty
     if (!sms_response) {
