@@ -88,7 +88,6 @@ module.exports = createCoreController("api::message.message", ({ strapi }) => ({
     // Add to DB as pending
     ctx.request.body.data.status = "pending";
     let sms_response = await super.create(ctx);
-    console.log("sending reuest");
     try {
       const response = await axios.request(options);
       // if reached here then it is a success, update status, if not, put keep pending and add comment, and reduce the credit by 1
@@ -118,7 +117,7 @@ module.exports = createCoreController("api::message.message", ({ strapi }) => ({
         isEnglish: isEnglish,
         "MESSAGE.length": MESSAGE.content.length,
       };
-    } catch (e) {
+    } catch (error) {
       return ctx.badRequest("Provider Did Not Accept the Message", error);
     }
 
