@@ -118,6 +118,7 @@ module.exports = createCoreController("api::message.message", ({ strapi }) => ({
         "MESSAGE.length": MESSAGE.content.length,
       };
     } catch (error) {
+      console.log(error);
       return ctx.badRequest("Provider Did Not Accept the Message", error);
     }
 
@@ -132,6 +133,7 @@ module.exports = createCoreController("api::message.message", ({ strapi }) => ({
 
     // if response var is empty
     if (!sms_response) {
+      console.log("sms_response null", sms_response);
       return ctx.badRequest("An Error occured", error);
     }
 
