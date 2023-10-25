@@ -32,7 +32,7 @@ module.exports = createCoreController("api::message.message", ({ strapi }) => ({
       saudiNumber = false;
     }
     const axios = require("axios");
-    let options;
+    var options;
     if (saudiNumber) {
       options = {
         method: "POST",
@@ -86,13 +86,13 @@ module.exports = createCoreController("api::message.message", ({ strapi }) => ({
     // Add to DB as pending
     ctx.request.body.data.status = "pending";
     let sms_response = await super.create(ctx);
-
+    console.log("sending reuest");
     axios
       .request(options)
       .then(async function (response) {
         // if reached here then it is a success, update status, if not, put keep pending and add comment, and reduce the credit by 1
         ctx.request.body.data.status = "sent";
-
+        console.log(options);
         response = await strapi.entityService.update(
           "api::message.message",
           sms_response.data.id,
