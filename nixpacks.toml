@@ -1,12 +1,15 @@
 [phases.install]
-cmds = ['cd src', 'pnpm install'] # Changed to pnpm as per your preference
+cmds = ['pnpm install'] # Changed to pnpm as per your preference
+working_directory = 'app' # Added to specify the working directory..
 
 [phases.build]
-cmds = ['cd src', 'pnpm build'] # Changed to pnpm as per your preference
+cmds = ['pnpm build'] # Changed to pnpm
+working_directory = 'app' # Added to specify the working directory
 
 [variables]
 NODE_ENV = 'production' # Setting the environment to production
 NIXPACK_NODE_VERSION = '20' # Specifying Node.js version
 
 [start]
-cmds = ['cd src', 'pnpm start'] # Changed to pnpm as per your preference
+cmd = 'pnpm start' # Changed to pnpm
+working_directory = 'app' # Added to specify the working directory
