@@ -9,7 +9,7 @@ cmds = ['npm run build']
 [variables]
 NODE_ENV = 'production' 
 NIXPACK_NODE_VERSION = '16' 
-NPM_CONFIG_PRODUCTION = true
+NPM_CONFIG_PRODUCTION = 'true'
 
 [start]
 cmd = 'npm run start' 
