@@ -1,12 +1,14 @@
+providers = ["node"]
+
 [phases.install]
-cmds = ['pnpm install'] # Changed to pnpm as per your preference
+cmds = ['yarn install'] # Changed to pnpm as per your preference
 
 [phases.build]
-cmds = ['pnpm build'] # Changed to pnpm
+cmds = ['yarn build'] # Changed to pnpm
 
 [variables]
 NODE_ENV = 'production' # Setting the environment to production
 NIXPACK_NODE_VERSION = '16' # Specifying Node.js version
 
 [start]
-cmd = 'pnpm start' # Changed to pnpm
+cmd = 'yarn start' # Changed to pnpm
