@@ -6,7 +6,7 @@ cmds = ['pnpm build'] # Changed to pnpm
 
 [variables]
 NODE_ENV = 'production' # Setting the environment to production
-NIXPACK_NODE_VERSION = '20' # Specifying Node.js version
+NIXPACK_NODE_VERSION = '18' # Specifying Node.js version
 
 [start]
 cmd = 'pnpm start' # Changed to pnpm
