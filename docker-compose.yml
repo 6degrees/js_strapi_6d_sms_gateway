@@ -7,9 +7,5 @@ services:
       dockerfile: Dockerfile
     container_name: strapi_6d_sms
     restart: unless-stopped
-    ports:
-      - "1337:1337"
-    env_file:
-      - stack.env
     volumes:
       - ./app:/srv/app/
