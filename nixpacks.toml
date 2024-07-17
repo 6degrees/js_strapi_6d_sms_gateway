@@ -1,12 +1,15 @@
 [phases.install]
-cmds = ['yarn install']
+cmds = ['pnpm install'] # Changed to pnpm as per your preference
+working_directory = 'src' # Added to specify the working directory..
 
 [phases.build]
-cmds = ['yarn build']
+cmds = ['pnpm build'] # Changed to pnpm
+working_directory = 'src' # Added to specify the working directory
 
 [variables]
-NODE_ENV = 'production'
-NIXPACK_NODE_VERSION = '20'
+NODE_ENV = 'production' # Setting the environment to production
+NIXPACK_NODE_VERSION = '20' # Specifying Node.js version
 
 [start]
-cmd = ['yarn start']
+cmd = ['pnpm start'] # Changed to pnpm
+working_directory = 'src' # Added to specify the working directory
