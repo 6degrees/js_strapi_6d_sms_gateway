@@ -1,12 +1,12 @@
 [phases.install]
-cmds = ['cd app', 'pnpm install'] # Changed to pnpm as per your preference
+cmds = ['pnpm install'] # Changed to pnpm as per your preference
 
 [phases.build]
-cmds = ['cd app', 'pnpm build'] # Changed to pnpm
+cmds = ['pnpm build'] # Changed to pnpm
 
 [variables]
 NODE_ENV = 'production' # Setting the environment to production
 NIXPACK_NODE_VERSION = '20' # Specifying Node.js version
 
 [start]
-cmds = ['cd app', 'pnpm start'] # Changed to pnpm
+cmd = 'pnpm start' # Changed to pnpm
