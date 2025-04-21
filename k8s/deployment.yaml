@@ -13,6 +13,8 @@
           labels:
             app: sms-gateway-prod
         spec:
+          imagePullSecrets:
+            - name: ghcr-secret
           containers:
           - name: sms-gateway-prod
             image: ghcr.io/6degrees/js_strapi_6d_sms_gateway:latest
