@@ -1,11 +1,11 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: f6sny-api-v5
+  name: sms-gateway-prod-service
+  namespace: six-degrees-apps
 spec:
   selector:
-    app: f6sny-api-v5
-    component: backend
+    app: sms-gateway-prod
   ports:
     - port: 1337
       targetPort: 1337

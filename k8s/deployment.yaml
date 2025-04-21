@@ -1,27 +1,28 @@
     apiVersion: apps/v1
     kind: Deployment
     metadata:
-      name: f6sny-api-v5
+      name: sms-gateway-prod
+      namespace: six-degrees-apps
     spec:
-      replicas: 2
+      replicas: 1
       selector:
         matchLabels:
-          app: f6sny-api-v5
-          component: backend
+          app: sms-gateway-prod
       template:
         metadata:
           labels:
-            app: f6sny-api-v5
-            component: backend
+            app: sms-gateway-prod
         spec:
           containers:
-          - name: f6sny-api-v5
-            image: ghcr.io/f6sny/api.f6sny.com:latest
+          - name: sms-gateway-prod
+            image: ghcr.io/6degrees/js_strapi_6d_sms_gateway:latest
             ports:
               - containerPort: 1337
             envFrom:
               - secretRef:
-                  name: f6sny-api-secrets
+                  name: sms-gateway-prod-secrets
+              - configMapRef:
+                  name: sms-gateway-prod-configmap
             resources:
               requests:
                 memory: "256Mi"

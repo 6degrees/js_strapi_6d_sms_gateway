@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: sms-gateway-prod-configmap
+  namespace: six-degrees-apps
+data:
+  DATABASE_CLIENT: "mysql"
+  DATABASE_PORT: "3306"
+  FIRST_VALUE_BASE_URL: "https://api.goinfinito.me"
+  NODE_ENV: "production"

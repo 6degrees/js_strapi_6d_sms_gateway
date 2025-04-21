@@ -1,7 +1,8 @@
     apiVersion: networking.k8s.io/v1
     kind: Ingress
     metadata:
-      name: main-ingress
+      name: sms-gateway-prod-ingress
+      namespace: six-degrees-apps
       annotations:
         cert-manager.io/cluster-issuer: http01-clusterissuer
         nginx.ingress.kubernetes.io/ssl-redirect: "true"
@@ -10,16 +11,16 @@
       ingressClassName: nginx
       tls:
         - hosts:
-            - f6sny-api-v5.f6sny.com
-          secretName: f6sny-api-v5-tls
+            - sms.6d.com.sa
+          secretName: sms-gateway-prod-tls
       rules:
-      - host: f6sny-api-v5.f6sny.com
+      - host: sms.6d.com.sa
         http:
           paths:
             - path: /
               pathType: Prefix
               backend:
                 service:
-                  name: f6sny-api-v5
+                  name: sms-gateway-prod-service
                   port:
                     number: 1337
