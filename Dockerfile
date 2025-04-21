@@ -16,7 +16,7 @@ RUN npm run build
 
 FROM base
 COPY --from=prod-deps /app/node_modules ./node_modules
-COPY --from=build /app/dist ./dist
+COPY --from=build /app/build ./build
 # Rebuild Sharp for the current environment
 RUN cd /app && npm rebuild sharp --platform=linux --arch=x64
 EXPOSE 1337
