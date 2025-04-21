@@ -3,7 +3,20 @@
 FROM node:16-slim AS base
 
 RUN apt-get update && \
-    apt-get install -y --no-install-recommends curl libvips-dev build-essential python3
+    apt-get install -y --no-install-recommends \
+    curl \
+    libvips-dev \
+    build-essential \
+    python3 \
+    pkg-config \
+    libglib2.0-dev \
+    libexpat1-dev \
+    libpng-dev \
+    libjpeg-dev \
+    libtiff-dev \
+    libgif-dev \
+    librsvg2-dev \
+    libwebp-dev
 COPY . /app
 WORKDIR /app
 
