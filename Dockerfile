@@ -1,21 +1,18 @@
-# Reference: https://pnpm.io/docker#example-1-build-a-bundle-in-a-docker-container
+# Reference: https://docs.docker.com/language/nodejs/build-images/
 
-FROM node:18-slim AS base
+FROM node:16-slim AS base
 
 RUN apt-get update && \
     apt-get install -y --no-install-recommends curl libvips-dev build-essential python3
-ENV PNPM_HOME="/pnpm"
-ENV PATH="$PNPM_HOME:$PATH"
-RUN corepack enable
 COPY . /app
 WORKDIR /app
 
 FROM base AS prod-deps
-RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm i -P --frozen-lockfile
+RUN npm ci --only=production
 
 FROM base AS build
-RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm i --frozen-lockfile
-RUN pnpm build
+RUN npm ci
+RUN npm run build
 
 FROM base
 COPY --from=prod-deps /app/node_modules ./node_modules
